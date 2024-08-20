@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah ANGGOTA</title>
+    <title>Tambah Anggota</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
@@ -16,30 +16,33 @@
         
         <form action="" method="post">
             <div class="form-group">
-                <label>Jenis Kelamin</label>
-                <input name="jenis_kelamin" type="text" class="form-control" placeholder="Jenis Kelamin" required>
+                <label>Nama Anggota</label>
+                <input name="nama_anggota" type="text" class="form-control" placeholder="Nama Anggota" required>
             </div>
            
-            <form action="" method="post">
+    
             <div class="form-group">
-                <label>Nama Anggota</label> 
-                <input name="nama_anggota" type="text" class="form-control" placeholder="Nama Anggota" required> <div class="form-group">
-             </div>
+            <label for="jenis_kelamin">Jenis Kelamin</label>
+            <select id="jenis_kelamin" name="jenis_kelamin" class="form-control" >
+                <option value="">Pilih Jenis Kelamin</option>
+                <option value="Laki-laki">Laki-laki</option>
+                <option value="Perempuan">Perempuan</option>
+            </select>
 
-             <form action="" method="post">
+
             <div class="form-group">
                 <label>No Telepon</label> 
                 <input name="no_telepon" type="text" class="form-control" placeholder="No Telepon" required> <div class="form-group">
              </div>
               
-             <form action="" method="post">
+        
             <div class="form-group">
-                <label>Alamat</label> 
+                <label>Alamat </label> 
                 <input name="alamat" type="text" class="form-control" placeholder="Alamat" required> <div class="form-group">
              </div>
              <div class="form-group">
                 <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
-                <a href="index.php?page=anggota" class="btn btn-secondary">Kembali</a>
+                <a href="index.php?page=petugas" class="btn btn-secondary">Kembali</a>
             </div>
         </form>
     </div>
@@ -53,34 +56,24 @@
 <?php
 
 
-<?php
-if (isset($_POST['simpan'])) {
-    $nama = htmlspecialchars($_POST['nama_anggota']);
-    $alamat = htmlspecialchars($_POST['alamat']);
-    $no_telp = htmlspecialchars($_POST['no_telp']);
-    $jenis_kelamin = htmlspecialchars($_POST['jenis_kelamin']);
-    $total_poin = htmlspecialchars($_POST['total_poin']);
+if (isset($_POST['simpan'])){
 
-    $pdo = koneksi::connect();
-    $member = member::getInstance($pdo);
-    if ($member->tambah($nama, $alamat, $no_telp, $jenis_kelamin, $total_poin)) {
-        echo "<script>window.location.href = 'index.php?page=member'</script>";
+    $nama_anggota = $_POST['nama_anggota'];
+    $jenis_kelamin = $_POST['jenis_kelamin'];
+    $no_telepon = $_POST['no_telepon'];
+    $alamat = $_POST['alamat'];
+
+
+    include("../../database/Koneksi.php");
+    include("../../class/anggota.php");
+    $pdo = Koneksi::connect();
+    $anggota = anggota::getInstance($pdo);
+    if (empty($nama_anggota) || empty($jenis_kelamin) || empty($no_telepon) || empty($alamat)) {
+        echo '<script>window.location="index.php?page=anggota&alert=err1"</script>'; 
+    } else if ($anggota->add($nama_anggota, $jenis_kelamin, $no_telepon, $alamat)) {
+        echo '<script>window.location="index.php?page=anggota&alert=success1"</script>';
     } else {
         echo "Terjadi kesalahan saat menyimpan data.";
     }
 }
-
-?>
-
-// if(isset($_POST['simpan'])){
-
-//     $id_anggota = $_POST['id_anggota'];
-//     $pdo = koneksi::connect();
-//     $sql = "INSERT INTO anggota (id_anggota) VALUES (?)";
-//     $q = $pdo->prepare($sql);
-//     $q->execute(array($nama_anggota));
-
-//     koneksi::disconnect();
-//     echo "<script> window.location.href = 'index.php?page=anggota' </script> ";
-// }
 ?>

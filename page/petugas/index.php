@@ -41,7 +41,7 @@
                             </td>   
                         </tr>
                     <?php
-                    koneksi::disconnect();
+                    koneksi::disconnect();t
                     }
                     ?>
                 </tbody>

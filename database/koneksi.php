@@ -1,5 +1,5 @@
 <?php
-class koneksi
+class Koneksi
 {
     private static $dbName = 'aplikasi_perpustakaan';
     private static $dbHost = 'localhost';

@@ -22,9 +22,12 @@
            
     
             <div class="form-group">
-                <label>Jenis Kelamin</label> 
-                <input name="jenis_kelamin" type="text" class="form-control" placeholder="Jenis Kelamin" required> <div class="form-group">
-             </div>
+            <label for="jenis_kelamin">Jenis Kelamin</label>
+            <select id="jenis_kelamin" name="jenis_kelamin" class="form-control" >
+                <option value="">Pilih Jenis Kelamin</option>
+                <option value="Laki-laki">Laki-laki</option>
+                <option value="Perempuan">Perempuan</option>
+            </select>
 
 
             <div class="form-group">
@@ -53,35 +56,23 @@
 <?php
 
 
-// if(isset($_POST['simpan'])){
-
-//     $id_petugas = $_POST['id_petugas'];
-//     $pdo = koneksi::connect();
-//     $sql = "INSERT INTO petugas (id_petugas) VALUES (?)";
-//     $q = $pdo->prepare($sql);
-//     $q->execute(array($nama_petugas));
-
-//     koneksi::disconnect();
-//     echo "<script> window.location.href = 'index.php?page=petugas' </script> ";
-// }
-// 
-
-
-
 if (isset($_POST['simpan'])) {
-    $nama_petugas = htmlspecialchars($_POST['nama_petugas']);
-    $alamat = htmlspecialchars($_POST['alamat']);
-    $no_telepon = htmlspecialchars($_POST['jenis_kelamin']);
-    $jenis_kelamin = htmlspecialchars($_POST['no_telepon']);
-    $alamat_petugas= htmlspecialchars($_POST['alamat_petugas']);
+
+    $nama_petugas = $_POST['nama_petugas'];
+    $jenis_kelamin = $_POST['jenis_kelamin'];
+    $no_telepon = $_POST['no_telepon'];
+    $alamat_petugas = $_POST['alamat_petugas'];
+
+
 
     $pdo = koneksi::connect();
-    $member = petugas::getInstance($pdo);
-    if ($member->tambah($nama, $alamat, $no_telp, $jenis_kelamin, $total_poin)) {
-        echo "<script>window.location.href = 'index.php?page=member'</script>";
+    $petugas = petugas::getInstance($pdo);
+    if (empty($nama_petugas) || empty($jenis_kelamin) || empty($no_telepon) || empty($alamat_petugas)) {
+        echo '<script>window.location="index.php?page=petugas&alert=err1"</script>'; 
+    } else if ($petugas->add($nama_petugas, $jenis_kelamin, $no_telepon, $alamat_petugas)) {
+        echo '<script>window.location="index.php?page=petugas&alert=success1"</script>';
     } else {
         echo "Terjadi kesalahan saat menyimpan data.";
     }
 }
-
 ?>
