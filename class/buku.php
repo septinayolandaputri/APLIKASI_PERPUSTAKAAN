@@ -5,15 +5,15 @@ class Buku
     private $db;
     private static $instance = null;
 
-    public function __construct($db_conn)
+    private function __construct($db_conn)
     {
         $this->db = $db_conn;
     }
 
-    public static function getInstance($pdo)
+    public static function getInstance($db_conn)
     {
         if (self::$instance == null) {
-            self::$instance = new Buku($pdo);
+            self::$instance = new self($db_conn);
         }
         return self::$instance;
     }
@@ -23,15 +23,15 @@ class Buku
     {
         try {
             $stmt = $this->db->prepare("INSERT INTO buku (id_buku, nama_buku, id_penerbit, tahun_penerbit, id_pengarang) VALUES (:id_buku, :nama_buku, :id_penerbit, :tahun_penerbit, :id_pengarang)");
-            $stmt->bindParam(":id_buku", $id_buku);
+            $stmt->bindParam(":id_buku", $id_buku, PDO::PARAM_INT);
             $stmt->bindParam(":nama_buku", $nama_buku);
-            $stmt->bindParam(":id_penerbit", $id_penerbit);
+            $stmt->bindParam(":id_penerbit", $id_penerbit, PDO::PARAM_INT);
             $stmt->bindParam(":tahun_penerbit", $tahun_penerbit);
-            $stmt->bindParam(":id_pengarang", $id_pengarang);
+            $stmt->bindParam(":id_pengarang", $id_pengarang, PDO::PARAM_INT);
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            error_log($e->getMessage());
             return false;
         }
     }
@@ -40,11 +40,11 @@ class Buku
     {
         try {
             $stmt = $this->db->prepare("SELECT * FROM buku WHERE id_buku = :id_buku");
-            $stmt->execute(array(":id_buku" => $id_buku));
-            $data = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $data;
+            $stmt->bindParam(":id_buku", $id_buku, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            error_log($e->getMessage());
             return false;
         }
     }
@@ -54,16 +54,16 @@ class Buku
     public function update($id_buku, $nama_buku, $id_penerbit, $tahun_penerbit, $id_pengarang)
     {
         try {
-            $stmt = $this->db->prepare("UPDATE buku SET nama_buku = :nama_buku, id_penerbit = :id_penerbit, tahun_penerbit= :tahun_penerbit, id_pengarang = :id_pengarang WHERE id_buku = :id_buku");
-            $stmt->bindParam(":id_buku", $id_buku);
+            $stmt = $this->db->prepare("UPDATE buku SET nama_buku = :nama_buku, id_penerbit = :id_penerbit, tahun_penerbit = :tahun_penerbit, id_pengarang = :id_pengarang WHERE id_buku = :id_buku");
+            $stmt->bindParam(":id_buku", $id_buku, PDO::PARAM_INT);
             $stmt->bindParam(":nama_buku", $nama_buku);
-            $stmt->bindParam(":id_penerbit", $id_penerbit);
+            $stmt->bindParam(":id_penerbit", $id_penerbit, PDO::PARAM_INT);
             $stmt->bindParam(":tahun_penerbit", $tahun_penerbit);
-            $stmt->bindParam(":id_pengarang", $id_pengarang);
+            $stmt->bindParam(":id_pengarang", $id_pengarang, PDO::PARAM_INT);
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            error_log($e->getMessage());
             return false;
         }
     }
@@ -74,11 +74,11 @@ class Buku
     {
         try {
             $stmt = $this->db->prepare("DELETE FROM buku WHERE id_buku = :id_buku");
-            $stmt->bindParam(":id_buku", $id_buku);
+            $stmt->bindParam(":id_buku", $id_buku, PDO::PARAM_INT);
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            error_log($e->getMessage());
             return false;
         }
     }
@@ -90,10 +90,9 @@ class Buku
         try {
             $stmt = $this->db->prepare("SELECT * FROM buku");
             $stmt->execute();
-            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $data;
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            error_log($e->getMessage());
             return false;
         }
     }

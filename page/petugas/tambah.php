@@ -65,7 +65,7 @@ if (isset($_POST['simpan'])) {
 
 
 
-    $pdo = koneksi::connect();
+    $pdo = Koneksi::connect();
     $petugas = petugas::getInstance($pdo);
     if (empty($nama_petugas) || empty($jenis_kelamin) || empty($no_telepon) || empty($alamat_petugas)) {
         echo '<script>window.location="index.php?page=petugas&alert=err1"</script>'; 

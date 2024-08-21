@@ -3,8 +3,8 @@ if (empty($_GET['id_anggota'])) header("Location: index.php");
 
 $id_anggota = $_GET['id_anggota'];
 
-$pdo = koneksi::connect();
-$anggota = anggota::getInstance($pdo);
+$pdo = Koneksi::connect();
+$anggota = Anggota::getInstance($pdo);
 $result = $anggota->delete($id_anggota);
 if ($result) {
 
@@ -13,5 +13,5 @@ if ($result) {
     echo "Terjadi kesalahan saat menghapus data.";
 }
 
-koneksi::disconnect();
+Koneksi::disconnect();
 ?>

@@ -5,11 +5,11 @@ if (empty($_GET['id_petugas'])) {
     exit();
 }
 
-$id_peminjaman = $_GET['id_petugas'];
+$id_petugas = $_GET['id_petugas'];
 
 if (isset($_POST['simpan'])) {
 
-    $id_anggota= $_POST['id_petugas'];
+    $id_petugas = $_POST['id_petugas'];
 
     $pdo = koneksi::connect();
     $sql = "UPDATE petugas SET id_petugas = ? WHERE id_petugas = ?";
@@ -31,7 +31,7 @@ if (isset($_POST['simpan'])) {
         exit();
     }
 
-    $peminjaman = $data['id_petugas'];
+    $petugas = $data['id_petugas'];
     koneksi::disconnect();
 }
 ?>

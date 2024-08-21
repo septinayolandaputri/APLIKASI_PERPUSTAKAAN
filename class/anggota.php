@@ -1,11 +1,10 @@
 <?php
-
 class Anggota
 {
     private $db;
     private static $instance = null;
 
-    public function __construct($db_conn)
+    private function __construct($db_conn)
     {
         $this->db = $db_conn;
     }
@@ -17,86 +16,111 @@ class Anggota
         }
         return self::$instance;
     }
-
-    // FUNCTION TAMBAH ANGGOTA START
-    public function add($id_anggota, $nama_anggota, $jenis_kelamin, $no_telepon, $alamat)
+    /**
+     * Menambahkan anggota baru ke database.
+     *
+     * @param string $nama_anggota
+     * @param string $jenis_kelamin
+     * @param string $no_telepon
+     * @param string $alamat
+     * @return bool
+     */
+    public function add($nama_anggota, $jenis_kelamin, $no_telepon, $alamat)
     {
         try {
-            $stmt = $this->db->prepare("INSERT INTO anggota (id_anggota, nama_anggota, jenis_kelamin, no_telepon, alamat) VALUES (:id_angota, :nama_anggota, :jenis_kelamin, :no_telepon, :alamat)");
-            $stmt->bindParam(":id_anggota", $id_anggota);
-            $stmt->bindParam(":nama_anggota", $nama_anggota);
-            $stmt->bindParam(":jenis_kelamin", $jenis_kelamin);
-            $stmt->bindParam(":no_telepon", $no_telepon);
-            $stmt->bindParam(":alamat", $alamat);
-            $stmt->execute();
+            $stmt = $this->db->prepare("INSERT INTO anggota (nama_anggota, jenis_kelamin, no_telepon, alamat) VALUES (:nama_anggota, :jenis_kelamin, :no_telepon, :alamat)");
+            $stmt->execute([
+                ':nama_anggota' => $nama_anggota,
+                ':jenis_kelamin' => $jenis_kelamin,
+                ':no_telepon' => $no_telepon,
+                ':alamat' => $alamat
+            ]);
             return true;
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            error_log($e->getMessage());
             return false;
         }
     }
 
+    /**
+     * Mengambil data anggota berdasarkan ID.
+     *
+     * @param int $id_anggota
+     * @return array|false
+     */
     public function getID($id_anggota)
     {
         try {
             $stmt = $this->db->prepare("SELECT * FROM anggota WHERE id_anggota = :id_anggota");
-            $stmt->execute(array(":id_anggota" => $id_anggota));
-            $data = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $data;
+            $stmt->execute([':id_anggota' => $id_anggota]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            error_log($e->getMessage());
             return false;
         }
     }
-    // FUNCTION TAMBAH ANGGOTA END
 
-    // FUNCTION EDIT ANGGOTA START
+    /**
+     * Memperbarui data anggota berdasarkan ID.
+     *
+     * @param int $id_anggota
+     * @param string $nama_anggota
+     * @param string $jenis_kelamin
+     * @param string $no_telepon
+     * @param string $alamat
+     * @return bool
+     */
     public function update($id_anggota, $nama_anggota, $jenis_kelamin, $no_telepon, $alamat)
     {
         try {
             $stmt = $this->db->prepare("UPDATE anggota SET nama_anggota = :nama_anggota, jenis_kelamin = :jenis_kelamin, no_telepon = :no_telepon, alamat = :alamat WHERE id_anggota = :id_anggota");
-            $stmt->bindParam(":id_anggota", $id_anggota);
-            $stmt->bindParam(":nama_anggota", $nama_anggota);
-            $stmt->bindParam(":jenis_kelamin", $jenis_kelamin);
-            $stmt->bindParam(":no_telepon", $no_telepon);
-            $stmt->bindParam(":alamat", $alamat);
-            $stmt->execute();
+            $stmt->execute([
+                ':id_anggota' => $id_anggota,
+                ':nama_anggota' => $nama_anggota,
+                ':jenis_kelamin' => $jenis_kelamin,
+                ':no_telepon' => $no_telepon,
+                ':alamat' => $alamat
+            ]);
             return true;
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            error_log($e->getMessage());
             return false;
         }
     }
-    // FUNCTION EDIT ANGGOTA END
 
-    // FUNCTION DELETE ANGGOTA START
+    /**
+     * Menghapus data anggota berdasarkan ID.
+     *
+     * @param int $id_anggota
+     * @return bool
+     */
     public function delete($id_anggota)
     {
         try {
             $stmt = $this->db->prepare("DELETE FROM anggota WHERE id_anggota = :id_anggota");
-            $stmt->bindParam(":id_anggota", $id_anggota);
-            $stmt->execute();
+            $stmt->execute([':id_anggota' => $id_anggota]);
             return true;
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            error_log($e->getMessage());
             return false;
         }
     }
-    // FUNCTION DELETE ANGGOTA END
 
-    // FUNCTION GET ALL ANGGOTA START
+    /**
+     * Mengambil semua data anggota.
+     *
+     * @return array|false
+     */
     public function getAll()
     {
         try {
             $stmt = $this->db->prepare("SELECT * FROM anggota");
             $stmt->execute();
-            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $data;
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            error_log($e->getMessage());
             return false;
         }
     }
-    // FUNCTION GET ALL ANGGOTA END
 }
 ?>

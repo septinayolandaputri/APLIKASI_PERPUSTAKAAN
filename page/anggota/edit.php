@@ -11,17 +11,17 @@ if (isset($_POST['simpan'])) {
 
     $nama_anggota = $_POST['nama_anggota'];
 
-    $pdo = koneksi::connect();
-    $sql = "UPDATE anggota SET nama_anggota = ? WHERE id_anggota = ?";
+    $pdo = Koneksi::connect();
+    $sql = "UPDATE anggota SET nama_anggota = :nama_anggota WHERE id_anggota = ?";
     $q = $pdo->prepare($sql);
     $q->execute(array($nama_anggota,$id_anggota));
-    koneksi::disconnect();
+    Koneksi::disconnect();
 
     echo "<script> window.location.href = 'index.php?page=anggota' </script> ";
     exit();
 } else {
-    $pdo = koneksi::connect();
-    $sql = "SELECT * FROM anggota WHERE anggota = ?";
+    $pdo = Koneksi::connect();
+    $sql = "SELECT * FROM anggota WHERE id_anggota = :id_anggota";
     $q = $pdo->prepare($sql);
     $q->execute(array($id_anggota));
     $data = $q->fetch(PDO::FETCH_ASSOC);
@@ -32,7 +32,7 @@ if (isset($_POST['simpan'])) {
     }
 
     $nama_anggota = $data['nama_anggota'];
-    koneksi::disconnect();
+    Koneksi::disconnect();
 }
 ?>
 <!DOCTYPE html>
