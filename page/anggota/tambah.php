@@ -42,7 +42,7 @@
              </div>
              <div class="form-group">
                 <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
-                <a href="index.php?page=petugas" class="btn btn-secondary">Kembali</a>
+                <a href="index.php?page=anggota" class="btn btn-secondary">Kembali</a>
             </div>
         </form>
     </div>
@@ -57,7 +57,6 @@
 
 
 if (isset($_POST['simpan'])){
-
     $nama_anggota = $_POST['nama_anggota'];
     $jenis_kelamin = $_POST['jenis_kelamin'];
     $no_telepon = $_POST['no_telepon'];

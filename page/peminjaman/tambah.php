@@ -19,16 +19,18 @@
                 <label>Tanggal Peminjaman</label>
                 <input name="tanggal_peminjaman" type="text" class="form-control" placeholder="Tanggal Peminjaman" required>
             </div>
-           
-            <form action="" method="post">
+
+
             <div class="form-group">
                 <label>Tanggal Pengembalian</label> 
                 <input name="tanggal_pengembalian" type="text" class="form-control" placeholder="Tanggal Pengembalian" required> <div class="form-group">
              </div>
 
+              
+
              <div class="form-group">
                 <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
-                <a href="index.php?page=peminjaman" class="btn btn-secondary">Kembali</a>
+                <a href="index.php?page=penerbit" class="btn btn-secondary">Kembali</a>
             </div>
         </form>
     </div>
@@ -46,6 +48,8 @@ if (isset($_POST['simpan'])){
 
     $tanggal_peminjaman = $_POST['tanggal_peminjaman'];
     $tanggal_pengembalian = $_POST['tanggal_pengembalian'];
+
+
 
     include("../../database/Koneksi.php");
     include("../../class/peminjaman.php");

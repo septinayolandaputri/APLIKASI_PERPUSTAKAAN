@@ -1,38 +1,58 @@
-<?php 
+<?php
+include("../../database/Koneksi.php");
+include("../../class/anggota.php");
 
+// Memeriksa apakah ID anggota ada di parameter GET
 if (empty($_GET['id_anggota'])) {
-    echo "<script> window.location.href = 'index.php?page=anggota' </script> ";
+    header("Location: index.php?page=anggota");
     exit();
 }
 
 $id_anggota = $_GET['id_anggota'];
 
+// Proses form jika disubmit
 if (isset($_POST['simpan'])) {
 
+    $jenis_kelamin = $_POST['jenis_kelamin'];
     $nama_anggota = $_POST['nama_anggota'];
+    $no_telepon = $_POST['no_telepon'];
+    $alamat = $_POST['alamat'];
 
-    $pdo = Koneksi::connect();
-    $sql = "UPDATE anggota SET nama_anggota = :nama_anggota WHERE id_anggota = ?";
-    $q = $pdo->prepare($sql);
-    $q->execute(array($nama_anggota,$id_anggota));
-    Koneksi::disconnect();
+    try {
+        $pdo = Koneksi::connect();
+        $sql = "UPDATE anggota SET jenis_kelamin = :jenis_kelamin, nama_anggota = :nama_anggota, no_telepon = :no_telepon, alamat = :alamat WHERE id_anggota = :id_anggota";
+        $q = $pdo->prepare($sql);
+        $q->execute(array(':jenis_kelamin' => $jenis_kelamin, ':nama_anggota' => $nama_anggota, ':no_telepon' => $no_telepon, ':alamat' => $alamat, ':id_anggota' => $id_anggota));
+        Koneksi::disconnect();
 
-    echo "<script> window.location.href = 'index.php?page=anggota' </script> ";
-    exit();
-} else {
-    $pdo = Koneksi::connect();
-    $sql = "SELECT * FROM anggota WHERE id_anggota = :id_anggota";
-    $q = $pdo->prepare($sql);
-    $q->execute(array($id_anggota));
-    $data = $q->fetch(PDO::FETCH_ASSOC);
-
-    if (!$data) {
-        echo "<script> window.location.href = 'index.php?page=anggota' </script> ";
+        header("Location: index.php?page=anggota");
         exit();
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
     }
 
-    $nama_anggota = $data['nama_anggota'];
-    Koneksi::disconnect();
+} else {
+    try {
+        $pdo = Koneksi::connect();
+        $sql = "SELECT * FROM anggota WHERE id_anggota = :id_anggota";
+        $q = $pdo->prepare($sql);
+        $q->execute(array(':id_anggota' => $id_anggota));
+        $data = $q->fetch(PDO::FETCH_ASSOC);
+        Koneksi::disconnect();
+
+        if (!$data) {
+            header("Location: index.php?page=anggota");
+            exit();
+        }
+
+        $jenis_kelamin = $data['jenis_kelamin'];
+        $nama_anggota = $data['nama_anggota'];
+        $no_telepon = $data['no_telepon'];
+        $alamat = $data['alamat'];
+
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -56,19 +76,16 @@ if (isset($_POST['simpan'])) {
                 <input name="jenis_kelamin" type="text" class="form-control" placeholder="Jenis Kelamin" required value="<?php echo htmlspecialchars($jenis_kelamin); ?>">
             </div>
             
-        <form action="" method="post">
             <div class="form-group">
                 <label>Nama Anggota</label>
                 <input name="nama_anggota" type="text" class="form-control" placeholder="Nama Anggota" required value="<?php echo htmlspecialchars($nama_anggota); ?>">
             </div>
 
-            <form action="" method="post">
             <div class="form-group">
                 <label>No Telepon</label>
                 <input name="no_telepon" type="text" class="form-control" placeholder="No Telepon" required value="<?php echo htmlspecialchars($no_telepon); ?>">
             </div>
 
-            <form action="" method="post">
             <div class="form-group">
                 <label>Alamat</label>
                 <input name="alamat" type="text" class="form-control" placeholder="Alamat" required value="<?php echo htmlspecialchars($alamat); ?>">

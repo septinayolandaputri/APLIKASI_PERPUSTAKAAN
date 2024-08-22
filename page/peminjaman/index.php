@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peminjaman</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-5">
@@ -26,21 +26,35 @@
                 <tbody>
                     <?php
                     include('../../database/koneksi.php');
-                    //include('../../class/peminjaman.php');
-                   $pdo = Koneksi::connect();
-                    $sql ='SELECT * FROM peminjaman';
-                   foreach ($pdo->query($sql) as $row) {
-                    ?>  
+                    include('../../class/peminjaman.php');
+
+                    // Membuat koneksi ke database
+                    $pdo = Koneksi::connect();
+
+                    // Mendapatkan instance dari class detail peminjaman
+                    $peminjaman = peminjaman::getInstance($pdo);
+
+
+                    // Mengambil data peminjaman
+                    $dataPeminjaman = $peminjaman->getAll();
+
+                    $no = 1;
+                    foreach ($dataPeminjaman as $row) {
+                    ?>
                         <tr>
-                            <td><?php echo $row['id_peminjaman']; ?></td>
+                            <td><?php echo $no++; ?></td>
+                            <td><?php echo htmlspecialchars($row['tanggal_peminjaman'], ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td><?php echo htmlspecialchars($row['tanggal_pengembalian'], ENT_QUOTES, 'UTF-8'); ?></td>
                             <td>
-                                <a href="edit.php?page=peminjaman&act=edit&id_peminjaman=<?php echo $row['id_peminjaman'] ?>" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="hapus.php?page=peminjaman&act=hapus&id_peminjaman=<?php echo $row['id_peminjaman'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('apakah anda ingin menghapus data ini ?')">Hapus</a>
-                            </td>   
+                                <a href="edit.php?page=peminjaman&act=edit&id_peminjaman=<?php echo $row['id_peminjaman']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="hapus.php?page=peminjaman&act=hapus&id_peminjaman=<?php echo $row['id_peminjaman']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</a>
+                            </td>
                         </tr>
                     <?php
-                    koneksi::disconnect();
                     }
+
+                    // Menutup koneksi database
+                    Koneksi::disconnect();
                     ?>
                 </tbody>
             </table>

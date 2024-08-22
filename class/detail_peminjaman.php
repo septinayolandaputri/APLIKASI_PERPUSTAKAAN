@@ -18,22 +18,29 @@ class detail_peminjaman
         return self::$instance;
     }
 
-    // FUNCTION TAMBAH DETAIL_PEMINJAMAN START
-    public function add($id_detail_peminjaman, $nama_buku, $id_peminjaman, $id_buku)
-    {
-        try {
-            $stmt = $this->db->prepare("INSERT INTO detail_peminjaman (id_detail_peminjaman, nama_buku, id_peminjaman, id_buku) VALUES (:id_detail_peminjaman, :nama_buku, :id_peminjaman, :id_buku)");
-            $stmt->bindParam(":id_detail_peminjaman", $id_detail_peminjaman);
-            $stmt->bindParam(":nama_buku", $nama_buku);
-            $stmt->bindParam(":id_peminjaman", $id_peminjaman);
-            $stmt->bindParam(":id_buku", $id_buku);
-            $stmt->execute();
-            return true;
-        } catch (PDOException $e) {
-            echo $e->getMessage();
-            return false;
-        }
+    // FUNCTION TAMBAH DETAIL PEMINJAMAN START
+   public function add($nama_buku, $id_peminjaman, $id_buku)
+{
+    try {
+        // Menyiapkan query SQL
+        $stmt = $this->db->prepare("INSERT INTO detail_peminjaman (nama_buku, id_peminjaman, id_buku) VALUES (:nama_buku, :id_peminjaman, :id_buku)");
+
+        // Binding parameter dengan tipe yang sesuai
+        $stmt->bindParam(":nama_buku", $nama_buku, PDO::PARAM_STR);
+        $stmt->bindParam(":id_peminjaman", $id_peminjaman, PDO::PARAM_INT);
+        $stmt->bindParam(":id_buku", $id_buku, PDO::PARAM_INT);
+
+        // Mengeksekusi query
+        $stmt->execute();
+
+        return true;
+    } catch (PDOException $e) {
+        // Mencatat kesalahan ke log
+        error_log("Error saat menyimpan data detail peminjaman: " . $e->getMessage());
+        return false;
     }
+}
+
 
     public function getID($id_detail_peminjaman)
     {

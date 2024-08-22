@@ -1,6 +1,6 @@
 <?php
 
-class Peminjaman
+class peminjaman
 {
     private $db;
     private static $instance = null;
@@ -19,21 +19,27 @@ class Peminjaman
     }
 
     // FUNCTION TAMBAH PEMINJAMAN START
-    public function add( $id_anggota, $id_petugas, $tanggal_peminjaman, $tanggal_pengembalian)
-    {
-        try {
-            $stmt = $this->db->prepare("INSERT INTO peminjaman (id_anggota, id_petugas, tanggal_peminjaman, tanggal_pengembalian) VALUES ( :id_anggota, :id_petugas, :tanggal_peminjaman, :tanggal_pengembalian)");
-            $stmt->bindParam(":id_anggota", $id_anggota);
-            $stmt->bindParam(":id_petugas", $id_petugas);
-            $stmt->bindParam(":tanggal_peminjaman", $tanggal_peminjaman);
-            $stmt->bindParam(":tanggal_pengembalian", $tanggal_pengembalian);
-            $stmt->execute();
-            return true;
-        } catch (PDOException $e) {
-            echo $e->getMessage();
-            return false;
-        }
+   public function add($tanggal_peminjaman, $tanggal_pengembalian)
+{
+    try {
+        // Menyiapkan query SQL
+        $stmt = $this->db->prepare("INSERT INTO peminjaman (tanggal_peminjaman, tanggal_pengembalian) VALUES (:tanggal_peminjaman, :tanggal_pengembalian)");
+
+        // Binding parameter dengan tipe yang sesuai
+        $stmt->bindParam(":tanggal_peminjaman", $tanggal_peminjaman, PDO::PARAM_STR);
+        $stmt->bindParam(":tanggal_pengembalian", $tanggal_pengembalian, PDO::PARAM_INT);
+
+        // Mengeksekusi query
+        $stmt->execute();
+
+        return true;
+    } catch (PDOException $e) {
+        // Mencatat kesalahan ke log
+        error_log("Error saat menyimpan data  peminjaman: " . $e->getMessage());
+        return false;
     }
+}
+
 
     public function getID($id_peminjaman)
     {
@@ -49,26 +55,31 @@ class Peminjaman
     }
     // FUNCTION TAMBAH PEMINJAMAN END
 
-    //FUNCTION EDIT PEMINJAMAN START
-    public function update($id_peminjaman, $id_anggota, $id_petugas, $tanggal_peminjaman, $tanggal_pengembalian)
+    // FUNCTION EDIT PEMINJAMAN START
+    public function update($id_peminjaman, $tanggal_peminjaman, $tanggal_pengembalian)
     {
         try {
-            $stmt = $this->db->prepare("UPDATE peminjaman SET id_peminjaman = :id_peminjaman, id_anggota = :id_anggota, id_petugas = :id_petugas, tangga_peminjaman = :tanggal_peminjaman, tanggal_pengembalian = :tanggal_pengembakian WHERE id_peminjaman = :id_peminjaman");
-            $stmt->bindParam(":id_peminjaman", $id_peminjaman);
-            $stmt->bindParam(":id_anggota", $id_anggota);
-            $stmt->bindParam(":id_petugas", $id_petugas);
+            // SQL statement with consistent parameter names
+            $stmt = $this->db->prepare("UPDATE peminjaman SET tanggal_peminjaman = :tanggal_peminjaman, tanggal_pengembalian = :tanggal_pengembalian WHERE id_peminjaman = :id_peminjaman");
+            
+            // Bind parameters with correct names
+            $stmt->bindParam(":id_peminjaman", $id_peminjaman, PDO::PARAM_INT);
             $stmt->bindParam(":tanggal_peminjaman", $tanggal_peminjaman);
             $stmt->bindParam(":tanggal_pengembalian", $tanggal_pengembalian);
+            
+            // Execute the statement
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            // Use error logging for production environments
+            error_log("Error updating peminjaman: " . $e->getMessage());
+            echo "Terjadi kesalahan saat memperbarui data.";
             return false;
         }
     }
     // FUNCTION EDIT PEMINJAMAN END
 
-    // FUNCTION DELETE PEMINJAMAN START
+    // FUNCTION DELETE PEMINJAMNAN START
     public function delete($id_peminjaman)
     {
         try {

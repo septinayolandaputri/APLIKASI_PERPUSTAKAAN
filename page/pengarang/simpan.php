@@ -1,6 +1,6 @@
 <?php
-include_once "database/class/anggota.php";
-include_once "database/config.php";
+include_once "database/class/pengarang.php";
+include_once "database/Koneksi.php";
 
 
 

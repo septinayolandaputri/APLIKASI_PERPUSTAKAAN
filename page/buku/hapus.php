@@ -1,17 +1,26 @@
 <?php
-if (empty($_GET['id_buku'])) header("Location: index.php");
+if (empty($_GET['id_buku'])) {
+    header("Location: index.php");
+    exit();
+}
 
 $id_buku = $_GET['id_buku'];
 
-$pdo = koneksi::connect();
-$buku = buku::getInstance($pdo);
-$result = $buku->delete($id_buku);
-if ($result) {
+// Sanitasi parameter jika perlu
+$id_anggota = htmlspecialchars($id_buku, ENT_QUOTES, 'UTF-8');
 
-    echo "<script>window.location.href = 'index.php?page=buku';</script>";
+include("../../database/Koneksi.php");
+include("../../class/buku.php");
+$pdo = Koneksi::connect();
+$buku = Buku::getInstance($pdo);
+$result = $buku->delete($id_buku);
+
+if ($result) {
+    header("Location: index.php?page=buku");
+    exit();
 } else {
     echo "Terjadi kesalahan saat menghapus data.";
 }
 
-koneksi::disconnect();
+Koneksi::disconnect();
 ?>

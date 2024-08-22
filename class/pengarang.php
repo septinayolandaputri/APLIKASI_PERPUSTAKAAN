@@ -1,6 +1,6 @@
 <?php
 
-class Pengarang
+class pengarang
 {
     private $db;
     private static $instance = null;
@@ -13,31 +13,38 @@ class Pengarang
     public static function getInstance($pdo)
     {
         if (self::$instance == null) {
-            self::$instance = new Pengarang($pdo);
+            self::$instance = new pengarang($pdo);
         }
         return self::$instance;
     }
 
     // FUNCTION TAMBAH PENGARANG START
-    public function add($id_pengarang, $nama_pengarang, $asal_negara)
-    {
-        try {
-            $stmt = $this->db->prepare("INSERT INTO pengarag (id_pengarang, nama_pengarang, asal_negara) VALUES (:id_pengarang, :nama_pengarang, :asal_negara)");
-            $stmt->bindParam(":id_pengarang", $id_pengarang);
-            $stmt->bindParam(":nama_pengarang", $nama_pengarang);
-            $stmt->bindParam(":asal_negara", $asal_negara);
-            $stmt->execute();
-            return true;
-        } catch (PDOException $e) {
-            echo $e->getMessage();
-            return false;
-        }
+   public function add($nama_pengarang, $asal_negara)
+{
+    try {
+        // Menyiapkan query SQL
+        $stmt = $this->db->prepare("INSERT INTO pengarang (nama_pengarang, asal_negara) VALUES (:nama_pengarang, :asal_negara)");
+
+        // Binding parameter dengan tipe yang sesuai
+        $stmt->bindParam(":nama_pengarang", $nama_pengarang, PDO::PARAM_STR);
+        $stmt->bindParam(":asal_negara", $asal_negara, PDO::PARAM_INT);
+
+        // Mengeksekusi query
+        $stmt->execute();
+
+        return true;
+    } catch (PDOException $e) {
+        // Mencatat kesalahan ke log
+        error_log("Error saat menyimpan data  pengarang: " . $e->getMessage());
+        return false;
     }
+}
+
 
     public function getID($id_pengarang)
     {
         try {
-            $stmt = $this->db->prepare("SELECT * FROM pengarang WHERE id_pengarang = :id_pengarang");
+            $stmt = $this->db->prepare("SELECT * FROM pengarang WHERE id_pengarang = :id_pengaang");
             $stmt->execute(array(":id_pengarang" => $id_pengarang));
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data;
@@ -52,14 +59,21 @@ class Pengarang
     public function update($id_pengarang, $nama_pengarang, $asal_negara)
     {
         try {
-            $stmt = $this->db->prepare("UPDATE pengarang SET nama_pengarang = :nama_pengarang, asal_negara = :asal_negara WHERE id_pengarang = :id_pengarang");
-            $stmt->bindParam(":id_pengarang", $id_pengarang);
+            // SQL statement with consistent parameter names
+            $stmt = $this->db->prepare("UPDATE penagarang SET nama_pengarang = :nama_pengarang, asal_negara = :asal_negara WHERE id_pengarang = :id_pengarang");
+            
+            // Bind parameters with correct names
+            $stmt->bindParam(":id_pengarang", $id_pengarang, PDO::PARAM_INT);
             $stmt->bindParam(":nama_pengarang", $nama_pengarang);
             $stmt->bindParam(":asal_negara", $asal_negara);
+            
+            // Execute the statement
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            // Use error logging for production environments
+            error_log("Error updating pengarang: " . $e->getMessage());
+            echo "Terjadi kesalahan saat memperbarui data.";
             return false;
         }
     }

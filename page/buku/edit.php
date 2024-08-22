@@ -1,38 +1,56 @@
-<?php 
+<?php
+include("../../database/Koneksi.php");
+include("../../class/buku.php");
 
+// Memeriksa apakah ID buku ada di parameter GET
 if (empty($_GET['id_buku'])) {
-    echo "<script> window.location.href = 'index.php?page=buku' </script> ";
+    header("Location: index.php?page=buku");
     exit();
 }
 
 $id_buku = $_GET['id_buku'];
 
+// Proses form jika disubmit
 if (isset($_POST['simpan'])) {
 
     $nama_buku = $_POST['nama_buku'];
+    $tahun_penerbit = $_POST['tahun_penerbit'];
+    
 
-    $pdo = koneksi::connect();
-    $sql = "UPDATE buku SET nama_buku = ? WHERE id_buku = ?";
-    $q = $pdo->prepare($sql);
-    $q->execute(array($nama_buku,$id_buku));
-    koneksi::disconnect();
+    try {
+        $pdo = Koneksi::connect();
+        $sql = "UPDATE buku SET nama_buku = :nama_buku, tahun_penerbit = :tahun_penerbit WHERE id_buku = :id_buku";
+        $q = $pdo->prepare($sql);
+        $q->execute(array(':nama_buku' => $nama_buku, ':tahun_penerbit' => $tahun_penerbit, ':id_buku' => $id_buku));
+        Koneksi::disconnect();
 
-    echo "<script> window.location.href = 'index.php?page=buku' </script> ";
-    exit();
-} else {
-    $pdo = koneksi::connect();
-    $sql = "SELECT * FROM buku WHERE buku = ?";
-    $q = $pdo->prepare($sql);
-    $q->execute(array($id_buku));
-    $data = $q->fetch(PDO::FETCH_ASSOC);
-
-    if (!$data) {
-        echo "<script> window.location.href = 'index.php?page=buku' </script> ";
+        header("Location: index.php?page=buku");
         exit();
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
     }
 
-    $nama_buku = $data['nama_buku'];
-    koneksi::disconnect();
+} else {
+    try {
+        $pdo = Koneksi::connect();
+        $sql = "SELECT * FROM buku WHERE id_buku = :id_buku";
+        $q = $pdo->prepare($sql);
+        $q->execute(array(':id_buku' => $id_buku));
+        $data = $q->fetch(PDO::FETCH_ASSOC);
+        Koneksi::disconnect();
+
+        if (!$data) {
+            header("Location: index.php?page=buku");
+            exit();
+        }
+
+        $nama_buku = $data['nama_buku'];
+        $tahun_penerbit = $data['tahun_penerbit'];
+       
+
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -56,9 +74,8 @@ if (isset($_POST['simpan'])) {
                 <input name="nama_buku" type="text" class="form-control" placeholder="Nama Buku" required value="<?php echo htmlspecialchars($nama_buku); ?>">
             </div>
             
-        <form action="" method="post">
             <div class="form-group">
-                <label>tahun_penerbit</label>
+                <label>Tahun Penerbit</label>
                 <input name="tahun_penerbit" type="text" class="form-control" placeholder="Tahun Penerbit" required value="<?php echo htmlspecialchars($tahun_penerbit); ?>">
             </div>
 

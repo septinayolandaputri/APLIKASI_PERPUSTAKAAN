@@ -19,8 +19,6 @@
                 <label>Nama Buku</label>
                 <input name="nama_buku" type="text" class="form-control" placeholder="Nama Buku" required>
             </div>
-           
-
 
 
             <div class="form-group">
@@ -28,7 +26,7 @@
                 <input name="tahun_penerbit" type="text" class="form-control" placeholder="Tahun Penerbit" required> <div class="form-group">
              </div>
               
-        
+
              <div class="form-group">
                 <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
                 <a href="index.php?page=buku" class="btn btn-secondary">Kembali</a>
@@ -47,19 +45,18 @@
 
 if (isset($_POST['simpan'])){
 
-    $nama_buku = $_POST['nama_buku'];
+    $nama_buku= $_POST['nama_buku'];
     $tahun_penerbit = $_POST['tahun_penerbit'];
-   
 
 
     include("../../database/Koneksi.php");
     include("../../class/buku.php");
     $pdo = Koneksi::connect();
-    $buku = Buku::getInstance($pdo);
-    if (empty($nama_anggota) || empty($tahun_penerbit)) {
+    $buku = buku::getInstance($pdo);
+    if (empty($nama_buku) || empty($tahun_penerbit)) {
         echo '<script>window.location="index.php?page=buku&alert=err1"</script>'; 
     } else if ($buku->add($nama_buku, $tahun_penerbit)) {
-        echo '<script>window.location="index.php?page=buku&alert=success1"</script>';
+        echo '<script>window.location="index.php?page=anggota&alert=success1"</script>';
     } else {
         echo "Terjadi kesalahan saat menyimpan data.";
     }

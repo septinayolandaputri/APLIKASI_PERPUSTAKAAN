@@ -27,20 +27,34 @@
                     <?php
                     include('../../database/koneksi.php');
                     include('../../class/buku.php');
-                   $pdo = Koneksi::connect();
-                    $sql ='SELECT * FROM buku';
-                   foreach ($pdo->query($sql) as $row) {
-                    ?>  
+
+                    // Membuat koneksi ke database
+                    $pdo = Koneksi::connect();
+
+                    // Mendapatkan instance dari class Anggota
+                    $buku = Buku::getInstance($pdo);
+
+
+                    // Mengambil data buku
+                    $dataBuku = $buku->getAll();
+
+                    $no = 1;
+                    foreach ($dataBuku as $row) {
+                    ?>
                         <tr>
-                            <td><?php echo $row['id_buku']; ?></td>
+                            <td><?php echo $no++; ?></td>
+                            <td><?php echo htmlspecialchars($row['nama_buku'], ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td><?php echo htmlspecialchars($row['tahun_penerbit'], ENT_QUOTES, 'UTF-8'); ?></td>
                             <td>
-                                <a href="edit.php?page=buku&act=edit&id_buku=<?php echo $row['id_buku'] ?>" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="hapus.php?page=buku&act=hapus&id_buku=<?php echo $row['id_buku'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('apakah anda ingin menghapus data ini ?')">Hapus</a>
-                            </td>   
+                                <a href="edit.php?page=buku&act=edit&id_buku=<?php echo $row['id_buku']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="hapus.php?page=buku&act=hapus&id_buku=<?php echo $row['id_buku']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</a>
+                            </td>
                         </tr>
                     <?php
-                    Koneksi::disconnect();
                     }
+
+                    // Menutup koneksi database
+                    Koneksi::disconnect();
                     ?>
                 </tbody>
             </table>
