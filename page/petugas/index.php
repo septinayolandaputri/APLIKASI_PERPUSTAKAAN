@@ -18,10 +18,10 @@
                 <thead class="thead-dark">
                     <tr>
                         <th>NO</th>
-                        <th>NAMA_PETUGAS</th>
-                        <th>JENIS_KELAMIN</th>
-                        <th>NO_TELEPON</th>
-                        <th>ALAMAT</th>
+                        <th>NAMA PETUGAS</th>
+                        <th>JENIS KELAMIN</th>
+                        <th>NO TELEPON</th>
+                        <th>ALAMAT PETUGAS</th>
                         <th>AKSI</th>
                     </tr>
                 </thead>
@@ -29,20 +29,36 @@
                     <?php
                     include('../../database/koneksi.php');
                     include('../../class/petugas.php');
-                   $pdo = Koneksi::connect();
-                    $sql ='SELECT * FROM petugas';
-                   foreach ($pdo->query($sql) as $row) {
-                    ?>  
+
+                    // Membuat koneksi ke database
+                    $pdo = Koneksi::connect();
+
+                    // Mendapatkan instance dari class Petugas
+                    $petugas = Petugas::getInstance($pdo);
+
+
+                    // Mengambil data petugas
+                    $dataPetugas = $petugas->getAll();
+
+                    $no = 1;
+                    foreach ($dataPetugas as $row) {
+                    ?>
                         <tr>
-                            <td><?php echo $row['id_petugas']; ?></td>
+                            <td><?php echo $no++; ?></td>
+                            <td><?php echo htmlspecialchars($row['nama_petugas'], ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td><?php echo htmlspecialchars($row['jenis_kelamin'], ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td><?php echo htmlspecialchars($row['no_telepon'], ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td><?php echo htmlspecialchars($row['alamat_petugas'], ENT_QUOTES, 'UTF-8'); ?></td>
                             <td>
-                                <a href="edit.php?page=petugas&act=edit&id_petugas=<?php echo $row['id_petugas'] ?>" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="hapus.php?page=petugas&act=hapus&id_petugas=<?php echo $row['id_petugas'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('apakah anda ingin menghapus data ini ?')">Hapus</a>
-                            </td>   
+                                <a href="edit.php?page=petugas&act=edit&id_petugas=<?php echo $row['id_petugas']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="hapus.php?page=petugas&act=hapus&id_petugas=<?php echo $row['id_petugas']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</a>
+                            </td>
                         </tr>
-                     <?php
-                    koneksi::disconnect();
-                   }
+                    <?php
+                    }
+
+                    // Menutup koneksi database
+                    Koneksi::disconnect();
                     ?>
                 </tbody>
             </table>

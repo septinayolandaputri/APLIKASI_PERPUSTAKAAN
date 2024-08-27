@@ -19,7 +19,7 @@ class pengarang
     }
 
     // FUNCTION TAMBAH PENGARANG START
-   public function add($nama_pengarang, $asal_negara)
+   public function tambah($nama_pengarang, $asal_negara)
 {
     try {
         // Menyiapkan query SQL
@@ -44,7 +44,7 @@ class pengarang
     public function getID($id_pengarang)
     {
         try {
-            $stmt = $this->db->prepare("SELECT * FROM pengarang WHERE id_pengarang = :id_pengaang");
+            $stmt = $this->db->prepare("SELECT * FROM pengarang WHERE id_pengarang = :id_pengarang");
             $stmt->execute(array(":id_pengarang" => $id_pengarang));
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data;

@@ -30,7 +30,7 @@
 
              <div class="form-group">
                 <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
-                <a href="index.php?page=penerbit" class="btn btn-secondary">Kembali</a>
+                <a href="index.php?page=peminjaman" class="btn btn-secondary">Kembali</a>
             </div>
         </form>
     </div>

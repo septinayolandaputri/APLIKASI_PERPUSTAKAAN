@@ -31,7 +31,7 @@
                     // Membuat koneksi ke database
                     $pdo = Koneksi::connect();
 
-                    // Mendapatkan instance dari class detail peminjaman
+                    // Mendapatkan instance dari class  peminjaman
                     $peminjaman = peminjaman::getInstance($pdo);
 
 

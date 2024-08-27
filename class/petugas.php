@@ -1,6 +1,6 @@
 <?php
 
-class petugas
+class Petugas
 {
     private $db;
     private static $instance = null;
@@ -22,7 +22,7 @@ class petugas
     public function add( $nama_petugas, $jenis_kelamin, $no_telepon, $alamat_petugas)
     {
         try {
-            $stmt = $this->db->prepare("INSERT INTO petugas (id_petugas, nama_petugas, jenis_kelamin, no_telepon, alamat_petugas) VALUES (:id_petugas, :nama_petugas, :jenis_kelamin, :no_telepon, :alamat_petugas)");
+            $stmt = $this->db->prepare("INSERT INTO petugas (nama_petugas, jenis_kelamin, no_telepon, alamat_petugas) VALUES (:nama_petugas, :jenis_kelamin, :no_telepon, :alamat_petugas)");
             $stmt->bindParam(":nama_petugas", $nama_petugas);
             $stmt->bindParam(":jenis_kelamin", $jenis_kelamin);
             $stmt->bindParam(":no_telepon", $no_telepon);
@@ -53,7 +53,7 @@ class petugas
     public function update($id_petugas, $nama_petugas, $jenis_kelamin, $no_telepon, $alamat_petugas)
     {
         try {
-            $stmt = $this->db->prepare("UPDATE petugas SET id_petugas = :id_petugas, nama_petugas = :nama_petugas, jenis_kelamin = :jenis_kelamin, no_telepon = :no_telepon, alamat_petugas = :alamat_petugas WHERE id_petugas = :id_petugas");
+            $stmt = $this->db->prepare("UPDATE petugas SET nama_petugas = :nama_petugas, jenis_kelamin = :jenis_kelamin, no_telepon = :no_telepon, alamat_petugas = :alamat_petugas WHERE id_petugas = :id_petugas");
             $stmt->bindParam(":id_petugas", $id_petugas);
             $stmt->bindParam(":nama_petugas", $nama_petugas);
             $stmt->bindParam(":jenis_kelamin", $jenis_kelamin);

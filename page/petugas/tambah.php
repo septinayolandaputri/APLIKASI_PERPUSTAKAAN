@@ -38,7 +38,7 @@
         
             <div class="form-group">
                 <label>Alamat Petugas</label> 
-                <input name="alamat_petugas" type="text" class="form-control" placeholder="Alamat_petugas" required> <div class="form-group">
+                <input name="alamat_petugas" type="text" class="form-control" placeholder="Alamat Petugas" required> <div class="form-group">
              </div>
              <div class="form-group">
                 <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
@@ -56,17 +56,17 @@
 <?php
 
 
-if (isset($_POST['simpan'])) {
-
+if (isset($_POST['simpan'])){
     $nama_petugas = $_POST['nama_petugas'];
     $jenis_kelamin = $_POST['jenis_kelamin'];
     $no_telepon = $_POST['no_telepon'];
     $alamat_petugas = $_POST['alamat_petugas'];
 
 
-
+    include("../../database/Koneksi.php");
+    include("../../class/petugas.php");
     $pdo = Koneksi::connect();
-    $petugas = petugas::getInstance($pdo);
+    $petugas = Petugas::getInstance($pdo);
     if (empty($nama_petugas) || empty($jenis_kelamin) || empty($no_telepon) || empty($alamat_petugas)) {
         echo '<script>window.location="index.php?page=petugas&alert=err1"</script>'; 
     } else if ($petugas->add($nama_petugas, $jenis_kelamin, $no_telepon, $alamat_petugas)) {

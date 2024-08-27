@@ -1,38 +1,58 @@
-<?php 
+<?php
+include("../../database/Koneksi.php");
+include("../../class/petugas.php");
 
+// Memeriksa apakah ID petugas ada di parameter GET
 if (empty($_GET['id_petugas'])) {
-    echo "<script> window.location.href = 'index.php?page=petugas' </script> ";
+    header("Location: index.php?page=petugas");
     exit();
 }
 
 $id_petugas = $_GET['id_petugas'];
 
+// Proses form jika disubmit
 if (isset($_POST['simpan'])) {
 
-    $id_petugas = $_POST['id_petugas'];
+    $nama_petugas = $_POST['nama_petugas'];
+    $jenis_kelamin = $_POST['jenis_kelamin'];
+    $no_telepon = $_POST['no_telepon'];
+    $alamat_petugas = $_POST['alamat_petugas'];
 
-    $pdo = koneksi::connect();
-    $sql = "UPDATE petugas SET id_petugas = ? WHERE id_petugas = ?";
-    $q = $pdo->prepare($sql);
-    $q->execute(array($id_petugas,$id_petugas));
-    koneksi::disconnect();
+    try {
+        $pdo = Koneksi::connect();
+        $sql = "UPDATE petugas SET nama_petugas = :nama_petugas, jenis_kelamin = :jenis_kelamin,  no_telepon = :no_telepon, alamat_petugas = :alamat_petugas WHERE id_petugas= :id_petugas";
+        $q = $pdo->prepare($sql);
+        $q->execute(array(':nama_petugas' => $nama_petugas, ':jenis_kelamin' => $jenis_kelamin, ':no_telepon' => $no_telepon, ':alamat_petugas' => $alamat_petugas, ':id_petugas' => $id_petugas));
+        Koneksi::disconnect();
 
-    echo "<script> window.location.href = 'index.php?page=petugas' </script> ";
-    exit();
-} else {
-    $pdo = koneksi::connect();
-    $sql = "SELECT * FROM petugas WHERE id_petugas = ?";
-    $q = $pdo->prepare($sql);
-    $q->execute(array($id_petugas));
-    $data = $q->fetch(PDO::FETCH_ASSOC);
-
-    if (!$data) {
-        echo "<script> window.location.href = 'index.php?page=petugas' </script> ";
+        header("Location: index.php?page=petugas");
         exit();
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
     }
 
-    $petugas = $data['id_petugas'];
-    koneksi::disconnect();
+} else {
+    try {
+        $pdo = Koneksi::connect();
+        $sql = "SELECT * FROM petugas WHERE id_petugas = :id_petugas";
+        $q = $pdo->prepare($sql);
+        $q->execute(array(':id_petugas' => $id_petugas));
+        $data = $q->fetch(PDO::FETCH_ASSOC);
+        Koneksi::disconnect();
+
+        if (!$data) {
+            header("Location: index.php?page=petugas");
+            exit();
+        }
+
+        $nama_petugas = $data['nama_petugas'];
+        $jenis_kelamin = $data['jenis_kelamin'];
+        $no_telepon = $data['no_telepon'];
+        $alamat_petugas = $data['alamat_petugas'];
+
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -51,27 +71,24 @@ if (isset($_POST['simpan'])) {
         </div>
 
         <form action="" method="post">
-            <div class="form-group">
+              <div class="form-group">
                 <label>Nama Petugas</label>
-                <input name="nama_petugas" type="text" class="form-control" placeholder="" required value="<?php echo htmlspecialchars($nama_petugas); ?>">
+                <input name="nama_petugas" type="text" class="form-control" placeholder="Nama Petugas" required value="<?php echo htmlspecialchars($nama_petugas); ?>">
             </div>
-            
-        <form action="" method="post">
+
             <div class="form-group">
                 <label>Jenis Kelamin</label>
-                <input name="jenis_kelamin" type="text" class="form-control" placeholder="jenis_kelamin" required value="<?php echo htmlspecialchars($jenis_kelamin); ?>">
+                <input name="jenis_kelamin" type="text" class="form-control" placeholder="Jenis Kelamin" required value="<?php echo htmlspecialchars($jenis_kelamin); ?>">
             </div>
 
-            <form action="" method="post">
             <div class="form-group">
                 <label>No Telepon</label>
-                <input name="no_telepon" type="text" class="form-control" placeholder="no_telepon" required value="<?php echo htmlspecialchars($no_telepon); ?>">
+                <input name="no_telepon" type="text" class="form-control" placeholder="No Telepon" required value="<?php echo htmlspecialchars($no_telepon); ?>">
             </div>
 
-            <form action="" method="post">
             <div class="form-group">
                 <label>Alamat Petugas</label>
-                <input name="alamat_petugas" type="text" class="form-control" placeholder="alamat_petugas" required value="<?php echo htmlspecialchars($alamat_petugas); ?>">
+                <input name="alamat_petugas" type="text" class="form-control" placeholder="Alamat Petugas" required value="<?php echo htmlspecialchars($alamat_petugas); ?>">
             </div>
 
             <div class="form-group">

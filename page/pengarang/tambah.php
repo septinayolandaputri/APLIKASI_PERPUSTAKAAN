@@ -23,7 +23,7 @@
 
             <div class="form-group">
                 <label>Asal Negara</label> 
-                <input name="asal_negara" type="text" class="form-control" placeholder="Asal Negara" required> <div class="form-group">
+                <input name="asal_negara" type="text" class="form-control" placeholder="Asal Negara" required>
              </div>
 
               
@@ -55,9 +55,9 @@ if (isset($_POST['simpan'])){
     include("../../class/pengarang.php");
     $pdo = Koneksi::connect();
     $pengarang = pengarang::getInstance($pdo);
-    if (empty($nama_penerbit) || empty($asal_negara)) {
+    if (empty($nama_pengarang) || empty($asal_negara)) {
         echo '<script>window.location="index.php?page=pengarang&alert=err1"</script>'; 
-    } else if ($pengarang->add($nama_pengarang, $asal_negara)) {
+    } else if ($pengarang->tambah($nama_pengarang, $asal_negara)) {
         echo '<script>window.location="index.php?page=pengarang&alert=success1"</script>';
     } else {
         echo "Terjadi kesalahan saat menyimpan data.";

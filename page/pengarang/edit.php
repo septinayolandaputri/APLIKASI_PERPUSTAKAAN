@@ -12,7 +12,7 @@ $id_pengarang = $_GET['id_pengarang'];
 
 // Proses form jika disubmit
 if (isset($_POST['simpan'])) {
-    $nama_penerbit = htmlspecialchars($_POST['nama_pengarang']);
+    $nama_pengarang = htmlspecialchars($_POST['nama_pengarang']);
     $asal_negara = htmlspecialchars($_POST['asal_negara']);
    
 

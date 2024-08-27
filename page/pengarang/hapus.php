@@ -4,7 +4,7 @@ if (empty($_GET['id_pengarang'])) {
     exit();
 }
 
-$id_penerbit = intval($_GET['id_pengarang']); // Mengonversi ID ke integer
+$id_pengarang = intval($_GET['id_pengarang']); // Mengonversi ID ke integer
 
 include("../../database/Koneksi.php");
 include("../../class/pengarang.php");
@@ -12,7 +12,7 @@ include("../../class/pengarang.php");
 try {
     $pdo = Koneksi::connect();
     $pengarang = Pengarang::getInstance($pdo);
-    $result = $penerbit->delete($id_pengarang);
+    $result = $pengarang->delete($id_pengarang);
 
     if ($result) {
         header("Location: index.php?page=pengarang");

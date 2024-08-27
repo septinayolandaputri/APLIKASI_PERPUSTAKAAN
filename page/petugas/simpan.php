@@ -2,9 +2,9 @@
 include_once "database/class/petugas.php";
 include_once "database/koneksi.php";
 
+// Mengamankan nilai 'act' dari parameter URL
+$act = isset($_GET['act']) ? htmlspecialchars($_GET['act']) : '';
 
-
-$act = isset($_GET['act']) ? $_GET['act'] : '';
 switch ($act) {
     case 'tambah':
         include 'tambah.php';

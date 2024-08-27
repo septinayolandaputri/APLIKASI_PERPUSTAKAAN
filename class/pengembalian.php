@@ -19,15 +19,11 @@ class Pengembalian
     }
 
     // FUNCTION TAMBAH PENGEMBALIAN START
-    public function add($id_pengembalian, $id_peminjaman, $id_petugas, $tanggal_pengembalian, $id_buku, $jumlah_pinjam)
+    public function add($tanggal_pengembalian, $jumlah_pinjam)
     {
         try {
-            $stmt = $this->db->prepare("INSERT INTO pengembalian (id_pengembalian, id_peminjaman, id_petugas, tanggal_pengembalian, id_buku, jumlah_pinjam) VALUES (:id_pengembalian, :id_peminjaman, :id_petugas, :tanggal_pengembalian, :id_buku, :jumlah_pinjam)");
-            $stmt->bindParam(":id_pengembalian", $id_pengembalian);
-            $stmt->bindParam(":id_peminjaman", $id_peminjaman);
-            $stmt->bindParam(":id_petugas", $id_petugas);
+            $stmt = $this->db->prepare("INSERT INTO pengembalian (tanggal_pengembalian, jumlah_pinjam) VALUES (:tanggal_pengembalian, :jumlah_pinjam)");
             $stmt->bindParam(":tanggal_pengembalian", $tanggal_pengembalian);
-            $stmt->bindParam(":id_buku", $id_buku);
             $stmt->bindParam(":jumlah_pinjam", $jumlah_pinjam);
             $stmt->execute();
             return true;
@@ -55,12 +51,13 @@ class Pengembalian
     public function update($id_pengembalian, $id_peminjaman, $id_petugas, $tanggal_pengembalian, $id_buku, $jumlah_pinjam)
     {
         try {
-            $stmt = $this->db->prepare("UPDATE pengembalian SET id_pengembalian = :id_pengembalian, id_peminjaman = :id_peminjaman, id_petugas = :id_petugas, tanggal_pengembalian = :tanggal_pengembakian, id_buku = :id_buku, jumlah_pinjam = :jumlah_pinjam WHERE id_pengembalian = :id_pengembalian");
+            $stmt = $this->db->prepare("UPDATE pengembalian SET id_peminjaman = :id_peminjaman, id_petugas = :id_petugas, tanggal_pengembalian = :tanggal_pengembalian, id_buku = :id_buku, jumlah_pinjam = :jumlah_pinjam WHERE id_pengembalian = :id_pengembalian");
             $stmt->bindParam(":id_pengembalian", $id_pengembalian);
             $stmt->bindParam(":id_peminjaman", $id_peminjaman);
             $stmt->bindParam(":id_petugas", $id_petugas);
             $stmt->bindParam(":tanggal_pengembalian", $tanggal_pengembalian);
             $stmt->bindParam(":id_buku", $id_buku);
+            $stmt->bindParam(":jumlah_pinjam", $jumlah_pinjam);
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
@@ -75,7 +72,7 @@ class Pengembalian
     {
         try {
             $stmt = $this->db->prepare("DELETE FROM pengembalian WHERE id_pengembalian = :id_pengembalian");
-            $stmt->bindParam(":id_pengembalan", $id_pengembalian);
+            $stmt->bindParam(":id_pengembalian", $id_pengembalian);
             $stmt->execute();
             return true;
         } catch (PDOException $e) {

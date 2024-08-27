@@ -18,7 +18,7 @@ if (isset($_POST['simpan'])) {
 
     try {
         $pdo = Koneksi::connect();
-        $sql = "UPDATE peminjaman SET tanggal_pengembalian = :tanggal_peminjaman, tanggal_pengembalian = :tanggal_pengembalian WHERE id_peminjaman = :id_peminjaman";
+        $sql = "UPDATE peminjaman SET tanggal_peminjaman = :tanggal_peminjaman, tanggal_pengembalian = :tanggal_pengembalian WHERE id_peminjaman = :id_peminjaman";
         $q = $pdo->prepare($sql);
         $q->execute(array(':tanggal_peminjaman' => $tanggal_peminjaman, ':tanggal_pengembalian' => $tanggal_pengembalian, ':id_peminjaman' => $id_peminjaman));
         Koneksi::disconnect();
@@ -77,7 +77,7 @@ if (isset($_POST['simpan'])) {
             
             <div class="form-group">
                 <label>Tanggal Pengembalian</label>
-                <input name="tanggal_pengembalian" type="text" class="form-control" placeholder="tanggal_pengembalian" required value="<?php echo htmlspecialchars($tanggal_pengembalian); ?>">
+                <input name="tanggal_pengembalian" type="text" class="form-control" placeholder="Tanggal Pengembalian" required value="<?php echo htmlspecialchars($tanggal_pengembalian); ?>">
             </div>
 
 

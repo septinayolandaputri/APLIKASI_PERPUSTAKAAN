@@ -31,11 +31,11 @@
                     // Membuat koneksi ke database
                     $pdo = Koneksi::connect();
 
-                    // Mendapatkan instance dari class detail peminjaman
+                    // Mendapatkan instance dari class pengarang
                     $penerbit = penerbit::getInstance($pdo);
 
 
-                    // Mengambil data peminjaman
+                    // Mengambil data pengarang
                     $dataPenerbit = $penerbit->getAll();
 
                     $no = 1;
